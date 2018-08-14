@@ -1,0 +1,19 @@
+import os
+import numpy as np
+from models import vgg19_model
+from deep_helpers import sparse_semantic_correspondence as SSC
+from util import util
+from util import MLS
+
+from options.options import Options
+opt = Options().parse()
+
+vgg19 = vgg19_model.define_Vgg19(opt)
+save_dir =  os.path.join(opt.results_dir, opt.name)
+
+ssc = SSC.sparse_semantic_correspondence(vgg19, opt.gpu_ids, opt.tau, opt.border_size, opt.isolation_th, save_dir, opt.k_per_level, opt.k_final)
+A = util.read_image(opt.datarootA, opt.imageSize)
+B = util.read_image(opt.datarootB, opt.imageSize)
+points = ssc.run(A, B)
+mls_util = MLS.MLS(v_class=np.int32)
+mls_util.run_MLS_in_folder(root_folder=save_dir)
