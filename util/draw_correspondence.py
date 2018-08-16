@@ -87,5 +87,5 @@ def draw_correspondence(A, B, correspondence, radius, save_dir, level = 0, name=
             A_marked = draw_square(A_marked, [center_1[0]+radius, center_1[1]+radius], color, radius=radius)
             B_marked = draw_square(B_marked, [center_2[0]+radius, center_2[1]+radius], color, radius=radius)
 
-    util.save_image(A_marked, os.path.join(save_dir, 'A_marked_'+str(level)+name+'.png'))
-    util.save_image(B_marked, os.path.join(save_dir, 'B_marked_'+str(level)+name+'.png'))
+    util.save_image(A_marked, os.path.join(save_dir, 'A_level_'+str(level)+name+'.png'))
+    util.save_image(B_marked, os.path.join(save_dir, 'B_level_'+str(level)+name+'.png'))

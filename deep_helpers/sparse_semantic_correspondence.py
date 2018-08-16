@@ -6,7 +6,7 @@ import torch.nn.functional as functional
 from torch.autograd import Variable
 from sklearn.cluster import KMeans
 from . import feature_metric as FM
-from . import draw_correspondence as draw
+from util import draw_correspondence as draw
 from util import util
 
 class sparse_semantic_correspondence():
@@ -17,7 +17,7 @@ class sparse_semantic_correspondence():
         self.border_size = border_size
         self.tau = tau
         self.k_per_level = k_per_level
-        self.k_final = [5,10,15,20,25]
+        self.k_final = k_final
         self.isolation_th = isolation_th
         self.patch_size_list = [[5,5],[5,5],[3,3],[3,3],[3,3]]
         self.search_box_radius_list = [3,3,2,2,2]
@@ -38,7 +38,7 @@ class sparse_semantic_correspondence():
             for j in range(A.size(3)):
                 init_pix_numpy = initial_mapping[0,:,i,j].cpu().numpy()
                 candidate_patch_A = A_padded[:,:,(i):(i+2*dx+1),(j):(j+2*dy+1)]
-                index = self.find_closest_patch_index_middle_style(B_padded, candidate_patch_A, initial_mapping[0,:,i,j], search_box_radius)
+                index = self.find_closest_patch_index(B_padded, candidate_patch_A, initial_mapping[0,:,i,j], search_box_radius)
                 A_to_B_map[:,:,i,j] = self.Tensor([index[0]-dx, index[1]-dy])
 
         return A_to_B_map
@@ -445,24 +445,8 @@ class sparse_semantic_correspondence():
         filtered_correspondence = self.finalize_correspondence(correspondence, image_width, L_final)
         draw.draw_correspondence(self.A, self.B, filtered_correspondence, self.draw_radius[L_final-1], self.save_dir)
         self.save_correspondence_as_txt(filtered_correspondence)
-        for i in range(len(self.k_final)):
-            top_correspondence_i = self.top_k_in_clusters(filtered_correspondence, self.k_final[i])
-            draw.draw_correspondence(self.A, self.B, top_correspondence_i, self.draw_radius[L_final-1], self.save_dir, name='_top_'+str(self.k_final[i]))
-            self.save_correspondence_as_txt(top_correspondence_i, name='_top_'+str(self.k_final[i]))
-
-        if L==1:
-            print("warping final image A_0")
-            At = self.warp(A.size(), self.B, [5,5], mapping_a_to_b)
-            At_mid = self.warp_to_mid(A.size(), self.B, self.A, [5,5], mapping_a_to_b)
-            print("warping final image B_0")
-            B = self.warp(B.size(), self.A, [5,5], mapping_b_to_a)
-            B_mid = self.warp_to_mid(B.size(), self.A, self.B, [5,5], mapping_b_to_a)
-            self.save_image(B_mid,'B_mid')
-            self.save_image(At_mid,'At_mid')
-            self.save_image(B,'B_0')
-            self.save_image(At,'At_0')
-
-        mid_correspondence = self.caculate_mid_correspondence(filtered_correspondence)
-        self.save_points_as_txt(mid_correspondence, 'mid_correspondence')
+        top_k_correspondence = self.top_k_in_clusters(filtered_correspondence, self.k_final)
+        draw.draw_correspondence(self.A, self.B, top_k_correspondence, self.draw_radius[L_final-1], self.save_dir, name='_top_'+str(self.k_final))
+        self.save_correspondence_as_txt(top_k_correspondence, name='_top_'+str(self.k_final))
 
         return scaled_correspondence

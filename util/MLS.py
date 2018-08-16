@@ -177,11 +177,7 @@ class MLS():
         warp_BtoA, vxy_BtoA = mls_util.run_MLS(img_B, points_B, points_A)
         warp_BtoM, vxy_BtoM = mls_util.run_MLS(img_B, points_B, points_middle)
 
-        cv2.imwrite('%s/warp_AtoB.png' % root_folder, warp_AtoB)
-        np.save('%s/warp_AtoB.npy' % root_folder,vxy_AtoB)
+        np.save('%s/AtoB.npy' % root_folder,vxy_AtoB)
         cv2.imwrite('%s/warp_AtoM.png' % root_folder, warp_AtoM)
-        np.save('%s/warp_AtoM.npy' % root_folder, vxy_AtoM)
-        cv2.imwrite('%s/warp_BtoA.png' % root_folder, warp_BtoA)
-        np.save('%s/warp_BtoA.npy' % root_folder, vxy_BtoA)
+        np.save('%s/BtoA.npy' % root_folder, vxy_BtoA)
         cv2.imwrite('%s/warp_BtoM.png' % root_folder, warp_BtoM)
-        np.save('%s/warp_BtoM.npy' % root_folder, vxy_BtoM)

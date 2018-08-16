@@ -1,5 +1,3 @@
-<br><br><br>
-
 # Neural Best-Buddies in PyTorch
 
 This is our PyTorch implementation for the Neural-Best Buddies paper. It is still under active development.
@@ -12,8 +10,8 @@ The code was written by [Kfir Aberman](https://kfiraberman.github.io/) and suppo
 If you use this code for your research, please cite:
 
 Neural Best-Buddies: Sparse Cross-Domain Correspondence
-[Kfir Aberman](https://kfiraberman.github.io/), [Jing Liao](https://liaojing.github.io/html/), [Mingyi Shi](https://rubbly.cn/), [Dani Lischinski](http://danix3d.droppages.com/), [Baoquan Chen](http://www.cs.sdu.edu.cn/~baoquan/), [Daniel Cohen-Or Lischinski](https://www.cs.tau.ac.il/~dcor/)
-In SIGGRAPH 2018. [[Bibtex]](http://people.csail.mit.edu/junyanz/projects/pix2pix/pix2pix.bib)
+[Kfir Aberman](https://kfiraberman.github.io/), [Jing Liao](https://liaojing.github.io/html/), [Mingyi Shi](https://rubbly.cn/), [Dani Lischinski](http://danix3d.droppages.com/), [Baoquan Chen](http://www.cs.sdu.edu.cn/~baoquan/), [Daniel Cohen-Or](https://www.cs.tau.ac.il/~dcor/)
+In SIGGRAPH 2018.
 
 ## Prerequisites
 - Linux or macOS
@@ -25,8 +23,18 @@ In SIGGRAPH 2018. [[Bibtex]](http://people.csail.mit.edu/junyanz/projects/pix2pi
 - Run the algorithm
 ```bash
 #!./script.sh
-python3 main.py --datarootA ./images/original_A.png --datarootB ./images/original_B.png --gpu_ids 0 --imageSize 224 --name lion_cat
+python3 main.py --datarootA ./images/original_A.png --datarootB ./images/original_B.png --gpu_ids 0 --name lion_cat
 ```
+### Output
+Sparse correspondence:
+- correspondence_A.txt, correspondence_B.txt
+- correspondence_A_top_k.txt, correspondence_B_top_k.txt
+
+Dense correspondence
+-  BtoA.npy, AtoB.npy
+
+Warped images (aligned to the middle image):
+- warp_AtoM.png, warp_BtoM.png
 
 ## Citation
 If you use this code for your research, please cite our papers.
@@ -43,6 +51,3 @@ If you use this code for your research, please cite our papers.
 }
 
 ```
-
-
-

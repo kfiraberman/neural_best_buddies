@@ -22,7 +22,7 @@ class Options():
         self.parser.add_argument('--k_per_level', type=int, default=1000, help='maximal number of best buddies per local search.')
         self.parser.add_argument('--k_final', type=int, default=10, help='The number of chosen best buddies based on their accumulative response.')
         self.parser.add_argument('--name', type=str, default='experiment_name', help='name of the experiment. It decides where to store samples and models')
-        self.parser.add_argument('--results_dir', type=str, default='./reults', help='models are saved here')
+        self.parser.add_argument('--results_dir', type=str, default='../results', help='models are saved here')
         self.parser.add_argument('--save_path', type=str, default='None', help='path to save outputs (use in features family)')
         self.parser.add_argument('--niter_decay', type=int, default=100, help='# of iter to linearly decay learning rate to zero')
         self.parser.add_argument('--beta1', type=float, default=0.5, help='momentum term of adam')
