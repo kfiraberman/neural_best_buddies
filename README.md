@@ -30,7 +30,7 @@ Sparse correspondence:
 - correspondence_A.txt, correspondence_B.txt
 - correspondence_A_top_k.txt, correspondence_B_top_k.txt
 
-Dense correspondence
+Dense correspondence:
 -  BtoA.npy, AtoB.npy
 
 Warped images (aligned to the middle image):
