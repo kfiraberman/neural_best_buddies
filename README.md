@@ -4,7 +4,7 @@ This is our PyTorch implementation for the Neural-Best Buddies paper. It is stil
 
 The code was written by [Kfir Aberman](https://kfiraberman.github.io/) and supported by [Mingyi Shi](https://rubbly.cn/).
 
-**Neural Best-Buddies: [Project](http://fve.bfa.edu.cn/recap/nbbs/) |  [Paper](https://arxiv.org/pdf/1805.04140.pds) **
+**Neural Best-Buddies: [Project](http://fve.bfa.edu.cn/recap/nbbs/) |  [Paper](https://arxiv.org/pdf/1805.04140.pdf) **
 <img src="./images/teaser.jpg" width="800" />
 
 If you use this code for your research, please cite:
