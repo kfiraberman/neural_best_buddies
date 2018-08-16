@@ -20,10 +20,10 @@ In SIGGRAPH 2018.
 
 ### Run
 
-- Run the algorithm
+- Run the algorithm (demo example)
 ```bash
 #!./script.sh
-python3 main.py --datarootA ./images/original_A.png --datarootB ./images/original_B.png --gpu_ids 0 --name lion_cat
+python3 main.py --datarootA ./images/original_A.png --datarootB ./images/original_B.png --name lion_cat --k_final 10
 ```
 ### Output
 Sparse correspondence:
