@@ -10,7 +10,7 @@ from util import draw_correspondence as draw
 from util import util
 
 class sparse_semantic_correspondence():
-    def __init__(self, model, gpu_ids, tau, border_size, save_dir, k_per_level, k_final):
+    def __init__(self, model, gpu_ids, tau, border_size, save_dir, k_per_level, k_final, fast):
         self.Tensor = torch.cuda.FloatTensor if gpu_ids else torch.Tensor
         self.model = model
         self.save_dir = save_dir
@@ -22,6 +22,7 @@ class sparse_semantic_correspondence():
         self.search_box_radius_list = [3,3,2,2,2]
         self.draw_radius = [2,2,2,4,8]
         self.pad_mode = 'reflect'
+        self.L_final = 2 if fast else 1
 
     def find_mapping(self, A, B, patch_size, initial_mapping, search_box_radius):
         assert(A.size() == B.size())
@@ -126,10 +127,6 @@ class sparse_semantic_correspondence():
         idnty_map[0,0,:,:].copy_(torch.arange(0,size[2]).repeat(size[3],1).transpose(0,1))
         idnty_map[0,1,:,:].copy_(torch.arange(0,size[3]).repeat(size[2],1))
         return idnty_map
-
-    def save_image(self, image, name):
-        im_numpy = util.tensor2im(image)
-        util.save_image(im_numpy, os.path.join(self.save_dir, name + '.png'))
 
     def spatial_distance(self, point_A, point_B):
         return math.pow((point_A - point_B).pow(2).sum(),0.5)
@@ -369,13 +366,12 @@ class sparse_semantic_correspondence():
         image_width = A.size(3)
         print("Saving original images...")
         util.mkdir(self.save_dir)
-        self.save_image(A, 'original_A')
-        self.save_image(B, 'original_B')
+        util.save_final_image(A, 'original_A', self.save_dir)
+        util.save_final_image(B, 'original_B', self.save_dir)
         self.A = self.Tensor(A.size()).copy_(A)
         self.B = self.Tensor(B.size()).copy_(B)
         print("Starting algorithm...")
         L_start = 5
-        L_final = 1
 
         self.model.set_input(self.A)
         F_A = self.model.forward(level = L_start).data
@@ -387,7 +383,7 @@ class sparse_semantic_correspondence():
         initial_map_a_to_b = self.identity_map(F_B.size())
         initial_map_b_to_a = initial_map_a_to_b.clone()
 
-        for L in range(L_start,L_final-1,-1):
+        for L in range(L_start,self.L_final-1,-1):
             patch_size = self.patch_size_list[L-1]
             search_box_radius = self.search_box_radius_list[L-1]
             draw_radius = self.draw_radius[L-1]
@@ -403,18 +399,18 @@ class sparse_semantic_correspondence():
             [correspondence, mapping_a_to_b, mapping_b_to_a] = self.find_neural_best_buddies(correspondence, F_A, F_Am, F_Bm, F_B, patch_size, initial_map_a_to_b, initial_map_b_to_a, search_box_radius, self.tau, self.k_per_level, deepest_level)
             correspondence = self.threshold_response_correspondence(correspondence, F_A, F_B, self.tau)
 
-            if L > L_final:
+            if L > self.L_final:
                 print("Drawing correspondence...")
                 scaled_correspondence = self.scale_correspondence(correspondence, L)
                 draw.draw_correspondence(self.A, self.B, scaled_correspondence, draw_radius, self.save_dir, L)
 
             [F_A, F_B, F_Am, F_Bm, initial_map_a_to_b, initial_map_b_to_a] = self.transfer_style_local(F_A, F_B, patch_size, image_width, mapping_a_to_b, mapping_b_to_a, L)
 
-        filtered_correspondence = self.finalize_correspondence(correspondence, image_width, L_final)
-        draw.draw_correspondence(self.A, self.B, filtered_correspondence, self.draw_radius[L_final-1], self.save_dir)
+        filtered_correspondence = self.finalize_correspondence(correspondence, image_width, self.L_final)
+        draw.draw_correspondence(self.A, self.B, filtered_correspondence, self.draw_radius[self.L_final-1], self.save_dir)
         self.save_correspondence_as_txt(filtered_correspondence)
         top_k_correspondence = self.top_k_in_clusters(filtered_correspondence, self.k_final)
-        draw.draw_correspondence(self.A, self.B, top_k_correspondence, self.draw_radius[L_final-1], self.save_dir, name='_top_'+str(self.k_final))
+        draw.draw_correspondence(self.A, self.B, top_k_correspondence, self.draw_radius[self.L_final-1], self.save_dir, name='_top_'+str(self.k_final))
         self.save_correspondence_as_txt(top_k_correspondence, name='_top_'+str(self.k_final))
 
         return scaled_correspondence
