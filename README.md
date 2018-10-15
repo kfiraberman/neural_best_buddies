@@ -24,7 +24,7 @@ Neural Best-Buddies: Sparse Cross-Domain Correspondence
 #!./script.sh
 python3 main.py --datarootA ./images/original_A.png --datarootB ./images/original_B.png --name lion_cat --k_final 10
 ```
-The option `--k_final` dictates the final number of returned points. The results will be saved at `./results/`. Use `--results_dir {directory_path_to_save_result}` to specify the results directory.
+The option `--k_final` dictates the final number of returned points. The results will be saved at `../results/`. Use `--results_dir {directory_path_to_save_result}` to specify the results directory.
 
 ### Output
 Sparse correspondence:
@@ -39,9 +39,10 @@ Warped images (aligned to their middle geometry):
 
 ### Tips
 - If you are running the algorithm on a bunch of pairs, we recommend to stop it at the second layer to reduce runtime (comes at the expense of accuracy), use the option `--fast`.
+- If the images are very similar (e.g, two frames extracted from a video), many corresponding points might be found, resulting in long runtime. In this case we suggest to limit the number of corresponding points per level by setting `--points_per_level 20` (or any other desired number)
 
 ## Citation
-If you use this code for your research, please cite our papers.
+If you use this code for your research, please cite our paper:
 ```
 @article{aberman2018neural,
   author = {Kfir, Aberman and Jing, Liao and Mingyi, Shi and Dani, Lischinski and Baoquan, Chen and Daniel, Cohen-Or},

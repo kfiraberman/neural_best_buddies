@@ -143,7 +143,6 @@ class sparse_semantic_correspondence():
         if deepest_level == True:
             refined_correspondence = self.find_best_buddies(a_to_b, b_to_a)
             refined_correspondence = self.calculate_activations(refined_correspondence, F_A, F_B)
-            refined_correspondence = self.limit_correspondence_number_per_level(refined_correspondence, F_A, F_B, self.tau, top=int(top))
         else:
             refined_correspondence = correspondence
             for i in range(len(correspondence[0])-1,-1,-1):
@@ -151,8 +150,6 @@ class sparse_semantic_correspondence():
                 [top_left_2, bottom_right_2] = self.extract_receptive_field(correspondence[1][i][0], correspondence[1][i][1], search_box_radius, [a_to_b.size(2), a_to_b.size(3)])
                 refined_correspondence_i = self.find_best_buddies(a_to_b, b_to_a, top_left_1, bottom_right_1, top_left_2, bottom_right_2)
                 refined_correspondence_i = self.calculate_activations(refined_correspondence_i, F_A, F_B)
-                if top < float('inf'):
-                    refined_correspondence_i = self.limit_correspondence_number_per_level(refined_correspondence_i, F_A, F_B, self.tau, top=int(top))
                 refined_correspondence = self.replace_refined_correspondence(refined_correspondence, refined_correspondence_i, i)
 
         return [refined_correspondence, a_to_b, b_to_a]
@@ -314,7 +311,6 @@ class sparse_semantic_correspondence():
         top_cluster_correspondence = [[],[],[]]
         print("Calculating K-means...")
         kmeans = KMeans(n_clusters=k, random_state=0).fit(correspondence_R_4)
-        print("Done.")
         for i in range(k):
             max_response = 0
             max_response_index = len(correspondence[0])
@@ -398,6 +394,9 @@ class sparse_semantic_correspondence():
             print("Finding best-buddies for the " + str(L) + "-th level")
             [correspondence, mapping_a_to_b, mapping_b_to_a] = self.find_neural_best_buddies(correspondence, F_A, F_Am, F_Bm, F_B, patch_size, initial_map_a_to_b, initial_map_b_to_a, search_box_radius, self.tau, self.k_per_level, deepest_level)
             correspondence = self.threshold_response_correspondence(correspondence, F_A, F_B, self.tau)
+            if self.k_per_level < float('inf'):
+                correspondence = self.top_k_in_clusters(correspondence, int(self.k_per_level))
+
 
             if L > self.L_final:
                 print("Drawing correspondence...")
