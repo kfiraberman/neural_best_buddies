@@ -1,6 +1,6 @@
 # Neural Best-Buddies in PyTorch
 
-This is our PyTorch implementation for the Neural-Best Buddies paper. It is still under active development.
+This is our PyTorch implementation for the Neural-Best Buddies paper.
 
 The code was written by [Kfir Aberman](https://kfiraberman.github.io/) and supported by [Mingyi Shi](https://rubbly.cn/).
 
