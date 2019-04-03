@@ -3,6 +3,7 @@
 
 
 import cv2
+import sys
 import numpy as np
 
 def read_points(filename):
