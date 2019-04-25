@@ -34,12 +34,12 @@ class MLS():
 
         data = np.zeros((xi.shape[0], yi.shape[0]))
         for i in range(z.shape[0]):
-            xp = np.array(range(0, xi[i, -1], int(xi[i, -1] / (x.shape[0] - 1) + .5))) if sys.version_info < (3, 0) else xp = np.array(range(0, xi[i, -1], int(xi[i, -1] / (x.shape[0] - 1) - .5)))
+            xp = np.array(range(0, xi[i, -1], int(xi[i, -1] / (x.shape[0] - 1) + .5))) if sys.version_info < (3, 0) else np.array(range(0, xi[i, -1], int(xi[i, -1] / (x.shape[0] - 1) - .5)))
             fp = z[i, :]
             data[xp[i]] = np.interp(xi[i, :], xp, fp)
 
         for i in range(yi.shape[1]):
-            xp = range(0, yi[-1, i], int(yi[-1, i] / (y.shape[1] - 1) + .5)) if sys.version_info < (3, 0) else xp = range(0, yi[-1, i], int(yi[-1, i] / (y.shape[1] - 1) - .5))
+            xp = range(0, yi[-1, i], int(yi[-1, i] / (y.shape[1] - 1) + .5)) if sys.version_info < (3, 0) else range(0, yi[-1, i], int(yi[-1, i] / (y.shape[1] - 1) - .5))
             fp = [data[row_index][i] for row_index in xp]
             data[:, i] = np.interp(yi[:, 1], xp, fp)
         return data.T
