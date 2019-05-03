@@ -1,9 +1,10 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-
-import cv2
+import matplotlib.pyplot as plt
 import numpy as np
+
+from PIL import Image
 
 def read_points(filename):
     points = []
@@ -13,35 +14,34 @@ def read_points(filename):
             points.append([int(items[1]), int(items[0])])
     return points
 
+
 class MLS():
     def __init__(self, step=15, v_class=np.int32):
         self.step = step
         self.v_class = v_class  # The type of vxy, can be np.float32, np.int32
         self.type = 'rigid'
 
-    def interp2(self, x, y, z, xi, yi):
-        rows, cols = z.shape
-        if len(x) != cols or len(y) != rows:
-            print('length of x and y arrays must match z shape')
-            import sys
-            sys.exit()
+    def interp2(self, x, y, v, xi, yi):
+        from scipy import interpolate
+        v_t = np.transpose(v)
+        f = interpolate.interp2d(x, y, v_t, kind='linear')
+        df = f(xi, yi)
+        return df
 
-        if len(xi) != len(yi):
-            print('Length of xi and yi should match')
-            import sys
-            sys.exit()
+    def bilinear_interp(self, x, y, image):
+        import math
+        x_f = max(math.floor(x), 0)
+        y_f = max(math.floor(y), 0)
+        x_c = min(math.ceil(x), image.shape[0] - 1)
+        y_c = min(math.ceil(y), image.shape[1] - 1)
 
-        data = np.zeros((xi.shape[0], yi.shape[0]))
-        for i in range(z.shape[0]):
-            xp = np.array(range(0, xi[i, -1], int(xi[i, -1] / (x.shape[0] - 1) - .5)))
-            fp = z[i, :]
-            data[xp[i]] = np.interp(xi[i, :], xp, fp)
-
-        for i in range(yi.shape[1]):
-            xp = range(0, yi[-1, i], int(yi[-1, i] / (y.shape[1] - 1) - .5))
-            fp = [data[row_index][i] for row_index in xp]
-            data[:, i] = np.interp(yi[:, 1], xp, fp)
-        return data.T
+        b = x - x_f
+        a = y - y_f
+        output = (1 - a) * (1 - b) * image[x_f, y_f] \
+                 + a * (1 - b) * image[x_f, y_c] \
+                 + b * (1 - a) * image[x_c, y_f] \
+                 + a * b * image[x_c, y_c]
+        return output
 
     def init_weights(self, points, gv, a=2):
         weights = np.zeros(shape=(gv.shape[0], points.shape[0]))
@@ -107,25 +107,31 @@ class MLS():
 
     def mlsd_2d_warp(self, image, mlsd, points_end, grid_x, grid_y):
         v = np.column_stack((grid_y.flatten(), grid_x.flatten()))
-        tx, ty = np.meshgrid(np.arange(image.shape[0], step=1), np.arange(image.shape[0], step=1))
         sfv = self.mlsd_2d_transform(mlsd, points_end)
         dxy = v - sfv
-        dxT = self.interp2(grid_x, grid_y, np.reshape(dxy[:, 1], newshape=(grid_x.shape)), tx, ty)
-        dyT = self.interp2(grid_x, grid_y, np.reshape(dxy[:, 0], newshape=(grid_x.shape)), tx, ty)
+
+        vx = np.reshape(dxy[:, 1], newshape=(grid_x.shape))
+        vy = np.reshape(dxy[:, 0], newshape=(grid_x.shape))
+
+        x, y = np.arange(image.shape[0], step=15), np.arange(image.shape[1], step=15)
+        xi, yi = np.arange(image.shape[0], step=1), np.arange(image.shape[0], step=1)
+
+        dxT = self.interp2(x, y, vx, xi, yi)
+        dyT = self.interp2(x, y, vy, xi, yi)
 
         vxy = np.column_stack((-dxT.flatten(), -dyT.flatten()))
         vxy = self.v_class(np.reshape(vxy, newshape=(image.shape[0], image.shape[1], 2)))
 
-        warpped_image = np.zeros_like(image)
-        warpped_image.fill(255)
+        warped_image = np.zeros_like(image)
+        warped_image.fill(255)
 
-        for x in range(warpped_image.shape[0]):
-            for y in range(warpped_image.shape[1]):
-                source_x = int(x + dxT[x, y])
-                source_y = int(y + dyT[x, y])
-                if source_x < warpped_image.shape[0] and source_y < warpped_image.shape[1]:
-                    warpped_image[x, y] = image[source_x, source_y]
-        return warpped_image, vxy
+        for x in range(warped_image.shape[0]):
+            for y in range(warped_image.shape[1]):
+                source_x = x + dxT[x, y]
+                source_y = y + dyT[x, y]
+                if source_x < warped_image.shape[0] and source_y < warped_image.shape[1]:
+                    warped_image[x, y] = self.bilinear_interp(source_x, source_y, image)
+        return warped_image, vxy
 
     def warp_MLS(self, image, points_start, points_end):
         assert (points_start.shape[0] == points_end.shape[0])
@@ -165,8 +171,9 @@ class MLS():
         return warp_image, vxy
 
     def run_MLS_in_folder(self, root_folder):
-        img_A = cv2.imread('%s/original_A.png' % root_folder)
-        img_B = cv2.imread('%s/original_B.png' % root_folder)
+        img_A = Image.open('%s/original_A.png' % root_folder).convert('RGB')
+        img_B = Image.open('%s/original_B.png' % root_folder).convert('RGB')
+
         points_A = read_points('%s/correspondence_A.txt' % root_folder)
         points_B = read_points('%s/correspondence_Bt.txt' % root_folder)
         points_middle = (np.array(points_A) + np.array(points_B)) / 2
@@ -178,6 +185,6 @@ class MLS():
         warp_BtoM, vxy_BtoM = mls_util.run_MLS(img_B, points_B, points_middle)
 
         np.save('%s/AtoB.npy' % root_folder,vxy_AtoB)
-        cv2.imwrite('%s/warp_AtoM.png' % root_folder, warp_AtoM)
+        plt.imsave('%s/warp_AtoM.png' % root_folder, warp_AtoM)
         np.save('%s/BtoA.npy' % root_folder, vxy_BtoA)
-        cv2.imwrite('%s/warp_BtoM.png' % root_folder, warp_BtoM)
+        plt.imsave('%s/warp_BtoM.png' % root_folder, warp_BtoM)
