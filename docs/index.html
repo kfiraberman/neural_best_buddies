@@ -1,0 +1,344 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0036)http://visualdynamics.csail.mit.edu/ -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>Neural Best-Buddies: Sparse Cross-Domain Correspondence</title>
+  <!-- <link rel="shortcut icon" href=""> -->
+  <link rel="stylesheet" href="./css/font.css">
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+  <body>
+    <!-- Title -->
+    <div class="logo">
+      <img src="./image/siggraph-logo.png">
+    </div>
+    <div class="container">
+      <br>
+      <span class="venue">SIGGRAPH 2018</span>
+      <span class="title">Neural Best-Buddies: Sparse Cross-Domain Correspondence</span>
+
+      <table align="center" border="0" width="860" class="authors">
+        <tbody>
+          <tr>
+            <td class="author">
+              <a href="https://kfiraberman.github.io/" target="_blank">Kfir Aberman</a>
+              <sup>1</sup>
+            </td>
+            <td class="author">
+              <a href="https://liaojing.github.io/html/" target="_blank">Jing Liao</a>
+              <sup>2</sup>
+            </td>
+            <td class="author">
+              <a href="https://rubbly.cn/" target="_blank">Mingyi Shi</a>
+              <sup>3</sup>
+            </td>
+            <td class="author">
+              <a href="http://www.cs.huji.ac.il/~danix/" target="_blank">Dani Lischinski</a>
+              <sup>4</sup>
+            </td>
+            <td class="author">
+              <a href="http://www.cs.sdu.edu.cn/~baoquan/" target="_blank">Baoquan Chen</a>
+              <sup>3,1</sup>
+            </td>
+            <td class="author">
+              <a href="https://www.cs.tau.ac.il/~dcor/" target="_blank">Daniel Cohen-Or</a>
+              <sup>5</sup>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+      <table align="center" border="0" width="100%" class="affiliations">
+        <tbody>
+          <tr>
+            <td class="affiliations">
+              <sup>1</sup>
+              <a href="http://fve.bfa.edu.cn/" target="_blank">AICFVE, Beijing Film Academy</a>
+            </td>
+            <td class="affiliations">
+              <sup>2</sup>
+              <a href="https://www.msra.cn/" target="_blank">Microsoft Research Asia</a>
+            </td>
+            <td class="affiliations">
+              <sup>3</sup>
+              <a href="http://www.cs.sdu.edu.cn/" target="_blank">Shandong University</a>
+            </td>
+            <td class="affiliations">
+              <sup>4</sup>
+              <a href="http://new.huji.ac.il/en" target="_blank">The Hebrew University of Jerusalem</a>
+            </td>
+            <td class="affiliations">
+              <sup>5</sup>
+              <a href="https://english.tau.ac.il/" target="_blank">Tel-Aviv University</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <br>
+      <table align="center">
+        <tbody>
+          <tr>
+            <td>
+              <center>
+                <img src="./image/teaser.png" width="840">
+              </center>
+            </td>
+          </tr>
+          <tr>
+            <td>
+            </td>
+          </tr>
+          <tr width="940">
+            <td class="caption">Top 5 Neural Best-Buddies for two cross-domain image pairs. Using deep features of a pre-trained neural network,
+              our coarse-to-fine sparse correspondence algorithm first finds high-level, low resolution, semantically matching
+              areas (indicated by the large blue circles), then narrows down the search area to intermediate levels (middle
+              green circles), until precise localization on well-defined edges in the pixel space (colored in corresponding
+              unique colors).</td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+
+      <!-- Result -->
+      <div class="section">
+        <span class="section-title"> Video </span>
+        <br>
+        <br>
+        <table align="center">
+          <tbody>
+            <tr>
+              <td>
+                <center>
+                  <iframe width="720" height="405" src="https://www.youtube.com/embed/tYqkMGaGmkk"
+                    frameborder="0" allowfullscreen=""></iframe>
+                </center>
+              </td>
+            </tr>
+            <!-- <video width="640" controls><source src="visualDynamics.mov" type="video/mp4">Your browser does not support the video tag. Please download it from <a href="visualDynamics.mov">this</a>.</video> -->
+            <tr>
+              <td>
+                <center>
+                  If you cannot access YouTube, please download our video here in
+                  <a href="./static/neural_best_buddies.mp4" target="_blank">1080p</a>
+                </center>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- <center><a href="visualDynamics.mov">Download</a><br><center> -->
+      </div>
+
+      <!-- Abstract -->
+      <div class="section">
+        <span class="section-title">Abstract </span>
+        <p>Correspondence between images is a fundamental problem in computer vision, with a variety of graphics applications.
+          This paper presents a novel method for
+          <i>sparse cross-domain correspondence</i>. Our method is designed for pairs of images where the main objects of interest
+          may belong to different semantic categories and differ drastically in shape and appearance, yet still contain semantically
+          related or geometrically similar parts. Our approach operates on hierarchies of deep features, extracted from the
+          input images by a pre-trained CNN. Specifically, starting from the coarsest layer in both hierarchies, we search
+          for Neural Best Buddies (NBB): pairs of neurons that are mutual nearest neighbors. The key idea is then to percolate
+          NBBs through the hierarchy, while narrowing down the search regions at each level and retaining only NBBs with
+          significant activations. Furthermore, in order to overcome differences in appearance, each pair of search regions
+          is transformed into a common appearance.
+        </p>
+        <p>
+          We evaluate our method via a user study, in addition to comparisons with alternative correspondence approaches. The usefulness
+          of our method is demonstrated using a variety of graphics applications, including cross-domain image alignment,
+          creation of hybrid images, automatic image morphing, and more.
+        </p>
+        <b>Downloads:</b>
+        <br>
+        <ul>
+          <li> Paper:
+            <span class="tag">
+              <a href="https://arxiv.org/pdf/1805.04140.pdf" target="_blank">arXiv</a>
+            </span>
+          </li>
+          <li> Code:
+            <span class="tag">
+              <a href="https://github.com/kfiraberman/neural_best_buddies">Github</a>
+            </span>
+            <br>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Network Architecture -->
+      <div class="section">
+        <span class="section-title"> Key Idea </span>
+        <br>
+        <br>
+        <table align="center">
+          <tbody>
+            <tr>
+              <td>
+                <center>
+                  <img src="./image/pipeline.png" width="850" style="margin: 30px 0">
+                </center>
+              </td>
+            </tr>
+            <tr>
+              <td class="caption">
+                At each level, pairs of strongly activated, mutual nearest neighbors, neurons are extracted from deep feature maps of a pre-trained CNN. The correspondences are propagated to the image pixel level in a coarse-to-fine manner, where at each consecutive finer level, the search area is determined by the receptive fields of the NBBs in the previous layer.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <span class="section-title">Results</span>
+        <table class="results text-nowrap" >
+          <tr>
+            <td colspan="8"><p class="subsection">Cross-domain Correspondence</p></td>
+          </tr>
+          <tr>
+            <td><img src="./image/results/1_A_marked0_top_5.png"></td>
+            <td><img src="./image/results/2_A_marked0_top_5.png"></td>
+            <td><img src="./image/results/3_A_marked0_top_5.png"></td>
+            <td><img src="./image/results/4_A_marked0_top_5.png"></td>
+            <td><img src="./image/results/6_A_marked0_top_5.png"></td>
+            <td><img src="./image/results/7_A_marked0_top_10.png"></td>
+            <td><img src="./image/results/8_A_marked0_top_10.png"></td>
+            <td><img src="./image/results/9_A_marked0_top_5.png"></td>
+          </tr>
+          <tr>
+              <td><img src="./image/results/1_Bt_marked0_top_5.png"></td>
+              <td><img src="./image/results/2_Bt_marked0_top_5.png"></td>
+              <td><img src="./image/results/3_Bt_marked0_top_5.png"></td>
+              <td><img src="./image/results/4_Bt_marked0_top_5.png"></td>
+              <td><img src="./image/results/6_Bt_marked0_top_5.png"></td>
+              <td><img src="./image/results/7_Bt_marked0_top_10.png"></td>
+              <td><img src="./image/results/8_Bt_marked0_top_10.png"></td>
+              <td><img src="./image/results/9_Bt_marked0_top_5.png"></td>
+          </tr>
+          <tr>
+        </table>
+
+        <table class="results text-nowrap">
+            <tr>
+                <td colspan="3"><p class="subsection">Top k correspondences</p> </td>
+                <td colspan="3"><p class="subsection">Different pose</p> </td>
+                <td colspan="2"><p class="subsection">Different scale</p> </td>
+              </tr>
+          <tr>
+            <td><img src="./image/results/k_number/A_marked0_top_5.png"></td>
+            <td><img src="./image/results/k_number/A_marked0_top_10.png"></td>
+            <td><img src="./image/results/k_number/A_marked0_top_20.png"></td>
+            <td><img src="./image/results/pose/1_A_marked0_top_20.png"></td>
+            <td><img src="./image/results/pose/2_A_marked0_top_20.png"></td>
+            <td><img src="./image/results/pose/3_A_marked0_top_20.png"></td>
+            <td><img src="./image/results/scale/1_A_marked0_top_10.png"></td>
+            <td><img src="./image/results/scale/2_A_marked0_top_10.png"></td>
+          </tr>
+          <tr>
+            <td><img src="./image/results/k_number/Bt_marked0_top_5.png"></td>
+            <td><img src="./image/results/k_number/Bt_marked0_top_10.png"></td>
+            <td><img src="./image/results/k_number/Bt_marked0_top_20.png"></td>
+            <td><img src="./image/results/pose/1_Bt_marked0_top_20.png"></td>
+            <td><img src="./image/results/pose/2_Bt_marked0_top_20.png"></td>
+            <td><img src="./image/results/pose/3_Bt_marked0_top_20.png"></td>
+
+            <td><img src="./image/results/scale/1_Bt_marked0_top_10.png"></td>
+            <td><img src="./image/results/scale/2_Bt_marked0_top_10.png"></td>
+
+          </tr>
+        </table>
+
+      </div>
+
+      <div class="section">
+          <span class="section-title">Application </span>
+          <p class="subsection">Image Hybridization</p>
+          <table class="results text-nowrap">
+            <tr>
+              <td align='center'><img style="width: 80%;" src="./image/hybrid_scheme.png"></td>
+            </tr>
+            <tr >
+              <td align='center'><img style="width: 60%;" src="./image/hybrids.png"></td>
+            </tr>
+          </table>
+          <p class="subsection">Image Morphing</p>
+          <table class="results text-nowrap" >
+              <tr>
+                <td><img src="./image/results/morphing/catdog_0_color1.png"></td>
+                <td><img src="./image/results/morphing/catdog_frame000.png"></td>
+                <td><img src="./image/results/morphing/catdog_frame035.png"></td>
+                <td><img src="./image/results/morphing/catdog_frame050.png"></td>
+                <td><img src="./image/results/morphing/catdog_frame065.png"></td>
+                <td><img src="./image/results/morphing/catdog_frame100.png"></td>
+                <td><img src="./image/results/morphing/catdog_100_color1.png"></td>
+                <td><img style="border:2px solid gray" src="./image/results/morphing/catdog.gif"></td>
+              </tr>
+              <tr>
+                  <td><img src="./image/results/morphing/mancaton_0_color1.png"></td>
+                  <td><img src="./image/results/morphing/mancaton_frame000.png"></td>
+                  <td><img src="./image/results/morphing/mancaton_frame035.png"></td>
+                  <td><img src="./image/results/morphing/mancaton_frame050.png"></td>
+                  <td><img src="./image/results/morphing/mancaton_frame065.png"></td>
+                  <td><img src="./image/results/morphing/mancaton_frame100.png"></td>
+                  <td><img src="./image/results/morphing/mancaton_100_color1.png"></td>
+                  <td><img style="border:2px solid gray" src="./image/results/morphing/mancaton.gif"></td>
+              </tr>
+              <tr>
+                  <td><img src="./image/results/morphing/bird_0_color1.png"></td>
+                  <td><img src="./image/results/morphing/bird_frame000.png"></td>
+                  <td><img src="./image/results/morphing/bird_frame035.png"></td>
+                  <td><img src="./image/results/morphing/bird_frame050.png"></td>
+                  <td><img src="./image/results/morphing/bird_frame065.png"></td>
+                  <td><img src="./image/results/morphing/bird_frame100.png"></td>
+                  <td><img src="./image/results/morphing/bird_100_color1.png"></td>
+                  <td><img style="border:2px solid gray" src="./image/results/morphing/bird.gif"></td>
+              </tr>
+            </table>
+            <p></p>
+      </div>
+
+      <div class="section">
+          <span class="section-title"> BibTex </span>
+          <p class="bibtex">
+@article{aberman2018neural,
+&nbsp; author={Aberman, Kfir and Liao, Jing and Shi, Mingyi and Lischinski, Dani and Chen, Baoquan and Cohen-Or, Daniel},
+&nbsp; title = {Neural Best-Buddies: Sparse Cross-Domain Correspondence},
+&nbsp; journal = {ACM Transactions on Graphics (TOG)},
+&nbsp; volume = {37},
+&nbsp; number = {4},
+&nbsp; pages = {69},
+&nbsp; year = {2018},
+&nbsp; publisher = {ACM}
+}
+          </p>
+          <!-- <center><a href="visualDynamics.mov">Download</a><br><center> -->
+        </div>
+
+        <div class="section">
+          <span class="section-title"> Acknowledgement </span>
+          <br>
+          <br> We thank the anonymous reviewers for their helpful comments.
+              This work was supported by National 973 Program (No. 2015CB352500) of China, the Israel Science Foundation (2366/16), and the ISF-NSFC Joint Research Program (2217/15, 2472/17).
+            <p></p>
+        </div>
+
+      <!-- end .container -->
+    </div>
+
+  </body>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?ffdb09173b1679d776cae886bbc1885f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+
+
+  </html>

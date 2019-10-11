@@ -1,6 +1,6 @@
 # Neural Best-Buddies in PyTorch
 
-This is our PyTorch implementation for the Neural-Best Buddies paper. It is still under active development.
+This is our PyTorch implementation for the Neural-Best Buddies paper.
 
 The code was written by [Kfir Aberman](https://kfiraberman.github.io/) and supported by [Mingyi Shi](https://rubbly.cn/).
 
@@ -39,20 +39,19 @@ Warped images (aligned to their middle geometry):
 
 ### Tips
 - If you are running the algorithm on a bunch of pairs, we recommend to stop it at the second layer to reduce runtime (comes at the expense of accuracy), use the option `--fast`.
-- If the images are very similar (e.g, two frames extracted from a video), many corresponding points might be found, resulting in long runtime. In this case we suggest to limit the number of corresponding points per level by setting `--points_per_level 20` (or any other desired number)
+- If the images are very similar (e.g, two frames extracted from a video), many corresponding points might be found, resulting in long runtime. In this case we suggest to limit the number of corresponding points per level by setting `--k_per_level 20` (or any other desired number)
 
 ## Citation
 If you use this code for your research, please cite our paper:
 ```
 @article{aberman2018neural,
-  author = {Kfir, Aberman and Jing, Liao and Mingyi, Shi and Dani, Lischinski and Baoquan, Chen and Daniel, Cohen-Or},
-  title = {Neural Best-Buddies: Sparse Cross-Domain Correspondence},
-  journal = {ACM Transactions on Graphics (TOG)},
-  volume = {37},
-  number = {4},
-  pages = {69},
-  year = {2018},
-  publisher = {ACM}
+  title={Neural best-buddies: Sparse cross-domain correspondence},
+  author={Aberman, Kfir and Liao, Jing and Shi, Mingyi and Lischinski, Dani and Chen, Baoquan and Cohen-Or, Daniel},
+  journal={ACM Transactions on Graphics (TOG)},
+  volume={37},
+  number={4},
+  pages={69},
+  year={2018},
+  publisher={ACM}
 }
-
 ```
