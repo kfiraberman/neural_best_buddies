@@ -45,7 +45,7 @@ Warped images (aligned to their middle geometry):
 
 The morphing results in the paper are based on the paper [Automating image morphing using structural similarity on a halfway domain](http://hhoppe.com/morph.pdf) by Liao et al.
 
-Here are detailed instructions for how to combine the output our code with the image morphing code:
+Here are detailed instructions for how to combine the output of our code with the image morphing code:
 
 First, please download the exe file from [here](https://drive.google.com/drive/folders/0BwMKxLMS8dFBSTBPa2lRUWxGbFk) and test whether it works on your machine with the given demo case as described in the UserGuide.dox or simply run “runme.bat”. Alternatively, the source code can be found [here](https://github.com/liaojing/Image-Morphing). When it works:
 
