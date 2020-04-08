@@ -22,7 +22,7 @@ def read_image(path, witdh):
 def get_transform(witdh):
     transform_list = []
     osize = [witdh, witdh]
-    transform_list.append(transforms.Scale(osize, Image.BICUBIC))
+    transform_list.append(transforms.Resize(osize, Image.BICUBIC))
     transform_list += [transforms.ToTensor(),
                        transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                             std=[0.229, 0.224, 0.225])]

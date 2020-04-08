@@ -123,10 +123,10 @@ class vgg19(nn.Module):
         return torch.Size([batch_size, channels[int(level)], width_layer, width_layer])
 
 class PerceptualLoss(nn.Module):
-    def __init__(self, tensor=torch.FloatTensor, size_average=True):
+    def __init__(self, tensor=torch.FloatTensor):
         super(PerceptualLoss, self).__init__()
         self.Tensor = tensor
-        self.loss = nn.MSELoss(size_average=size_average)
+        self.loss = nn.MSELoss(reduction='mean')
 
     def __call__(self, input, target_tensor):
         return self.loss(input, target_tensor)
