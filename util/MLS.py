@@ -129,7 +129,7 @@ class MLS():
             for y in range(warped_image.shape[1]):
                 source_x = x + dxT[x, y]
                 source_y = y + dyT[x, y]
-                if source_x < warped_image.shape[0] and source_y < warped_image.shape[1]:
+                if 0 <= source_x and source_x < warped_image.shape[0] and 0 <= source_y and source_y < warped_image.shape[1]:
                     warped_image[x, y] = self.bilinear_interp(source_x, source_y, image)
         return warped_image, vxy
 

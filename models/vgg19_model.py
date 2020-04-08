@@ -5,6 +5,8 @@ import torch
 import numpy as np
 import os
 
+from pkg_resources import parse_version
+
 def define_Vgg19(opt):
     use_gpu = len(opt.gpu_ids) > 0
     vgg19net = vgg19(models.vgg19(pretrained=True), opt)
@@ -92,7 +94,7 @@ class vgg19(nn.Module):
             deconvolved_feature_forward = self.forward(level=src_level, start_level=dst_level, set_as_var = False)
             loss_perceptual = criterionPerceptual(deconvolved_feature_forward, src_layer)
             loss_perceptual.backward()
-            error = loss_perceptual.data[0]
+            error = loss_perceptual.data[0] if parse_version(torch.__version__) <= parse_version('0.4.1') else loss_perceptual.data.item()
             self.update_last_losses(error)
             if (i % 3 == 0) and (print_errors == True):
                 print("error: ", error)
