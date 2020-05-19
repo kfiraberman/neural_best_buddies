@@ -16,6 +16,7 @@ Neural Best-Buddies: Sparse Cross-Domain Correspondence
 - Linux or macOS
 - Python 2 or 3
 - CPU or NVIDIA GPU + CUDA CuDNN
+- Pytorch > (1.x.x)
 
 ### Run
 
