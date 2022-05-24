@@ -19,6 +19,12 @@ def read_image(path, witdh):
     transform = get_transform(witdh)
     return transform(I).unsqueeze(0)
 
+def numpy_to_image(data, width):
+    I = Image.fromarray(np.uint8(data))
+    transform = get_transform(width)
+    return transform(I).unsqueeze(0)
+
+
 def get_transform(witdh):
     transform_list = []
     osize = [witdh, witdh]

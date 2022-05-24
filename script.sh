@@ -1,1 +1,1 @@
-python3 main.py --datarootA ./images/original_A.png --datarootB ./images/original_B.png --name lion_cat --k_final 5 --k_per_level 10
+python3 main.py --convergence_threshold 1 --datarootA ./images/Atlas.png --datarootB ./images/TestBrainSection2.png --name lion_cat --k_final 50 --k_per_level 100  --fast   --gpu_ids -1
