@@ -6,7 +6,7 @@ import torch.nn.functional as functional
 from torch.autograd import Variable
 from sklearn.cluster import KMeans
 from . import feature_metric as FM
-from util import draw_correspondence as draw
+# from util import draw_correspondence as draw
 from util import util
 
 class sparse_semantic_correspondence():
@@ -352,7 +352,7 @@ class sparse_semantic_correspondence():
         print("Drawing correspondence...")
         unique_correspondence = self.make_correspondence_unique(correspondence)
         scaled_correspondence = self.scale_correspondence(unique_correspondence, L)
-        draw.draw_correspondence(self.A, self.B, scaled_correspondence, self.draw_radius[L-1], self.save_dir, L)
+        # draw.draw_correspondence(self.A, self.B, scaled_correspondence, self.draw_radius[L-1], self.save_dir, L)
         scaled_correspondence = self.remove_border_correspondence(scaled_correspondence, self.border_size, image_width)
         print("No. of correspondence: ", len(scaled_correspondence[0]))
         return scaled_correspondence
@@ -361,9 +361,9 @@ class sparse_semantic_correspondence():
         assert(A.size() == B.size())
         image_width = A.size(3)
         print("Saving original images...")
-        util.mkdir(self.save_dir)
-        util.save_final_image(A, 'original_A', self.save_dir)
-        util.save_final_image(B, 'original_B', self.save_dir)
+        # util.mkdir(self.save_dir)
+        # util.save_final_image(A, 'original_A', self.save_dir)
+        # util.save_final_image(B, 'original_B', self.save_dir)
         self.A = self.Tensor(A.size()).copy_(A)
         self.B = self.Tensor(B.size()).copy_(B)
         print("Starting algorithm...")
@@ -401,15 +401,15 @@ class sparse_semantic_correspondence():
             if L > self.L_final:
                 print("Drawing correspondence...")
                 scaled_correspondence = self.scale_correspondence(correspondence, L)
-                draw.draw_correspondence(self.A, self.B, scaled_correspondence, draw_radius, self.save_dir, L)
+                # draw.draw_correspondence(self.A, self.B, scaled_correspondence, draw_radius, self.save_dir, L)
 
             [F_A, F_B, F_Am, F_Bm, initial_map_a_to_b, initial_map_b_to_a] = self.transfer_style_local(F_A, F_B, patch_size, image_width, mapping_a_to_b, mapping_b_to_a, L)
 
         filtered_correspondence = self.finalize_correspondence(correspondence, image_width, self.L_final)
-        draw.draw_correspondence(self.A, self.B, filtered_correspondence, self.draw_radius[self.L_final-1], self.save_dir)
-        self.save_correspondence_as_txt(filtered_correspondence)
+        # draw.draw_correspondence(self.A, self.B, filtered_correspondence, self.draw_radius[self.L_final-1], self.save_dir)
+        # self.save_correspondence_as_txt(filtered_correspondence)
         top_k_correspondence = self.top_k_in_clusters(filtered_correspondence, self.k_final)
-        draw.draw_correspondence(self.A, self.B, top_k_correspondence, self.draw_radius[self.L_final-1], self.save_dir, name='_top_'+str(self.k_final))
-        self.save_correspondence_as_txt(top_k_correspondence, name='_top_'+str(self.k_final))
+        # draw.draw_correspondence(self.A, self.B, top_k_correspondence, self.draw_radius[self.L_final-1], self.save_dir, name='_top_'+str(self.k_final))
+        # self.save_correspondence_as_txt(top_k_correspondence, name='_top_'+str(self.k_final))
 
-        return scaled_correspondence
+        return top_k_correspondence[0], top_k_correspondence[1]
