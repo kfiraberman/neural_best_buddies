@@ -23,8 +23,8 @@ class MLS():
 
     def interp2(self, x, y, v, xi, yi):
         from scipy import interpolate
-        v_t = np.transpose(v)
-        f = interpolate.interp2d(x, y, v_t, kind='linear')
+        # v_t = np.transpose(v)
+        f = interpolate.interp2d(x, y, v, kind='linear')
         df = f(xi, yi)
         return df
 
@@ -111,10 +111,10 @@ class MLS():
         dxy = v - sfv
 
         vx = np.reshape(dxy[:, 1], newshape=(grid_x.shape))
-        vy = np.reshape(dxy[:, 0], newshape=(grid_x.shape))
+        vy = np.reshape(dxy[:, 0], newshape=(grid_y.shape))
 
         x, y = np.arange(image.shape[0], step=15), np.arange(image.shape[1], step=15)
-        xi, yi = np.arange(image.shape[0], step=1), np.arange(image.shape[0], step=1)
+        xi, yi = np.arange(image.shape[0], step=1), np.arange(image.shape[1], step=1)
 
         dxT = self.interp2(x, y, vx, xi, yi)
         dyT = self.interp2(x, y, vy, xi, yi)
@@ -125,17 +125,20 @@ class MLS():
         warped_image = np.zeros_like(image)
         warped_image.fill(255)
 
+
+        print(warped_image.shape[0])
+
         for x in range(warped_image.shape[0]):
             for y in range(warped_image.shape[1]):
-                source_x = x + dxT[x, y]
-                source_y = y + dyT[x, y]
+                source_x = x + dxT[y, x]
+                source_y = y + dyT[y, x]
                 if 0 <= source_x and source_x < warped_image.shape[0] and 0 <= source_y and source_y < warped_image.shape[1]:
                     warped_image[x, y] = self.bilinear_interp(source_x, source_y, image)
         return warped_image, vxy
 
     def warp_MLS(self, image, points_start, points_end):
         assert (points_start.shape[0] == points_end.shape[0])
-        grid_x, grid_y = np.meshgrid(np.arange(image.shape[0], step=15), np.arange(image.shape[0], step=self.step))
+        grid_x, grid_y = np.meshgrid(np.arange(image.shape[0], step=15), np.arange(image.shape[1], step=self.step))
         gv = np.column_stack((grid_y.flatten(), grid_x.flatten()))
         mlsd = self.get_precompute_points(points_start, gv)
         warpped_image, vxy = self.mlsd_2d_warp(image, mlsd, points_end, grid_x, grid_y)
@@ -170,21 +173,21 @@ class MLS():
         vxy = vxy[padding:-padding, padding:-padding]
         return warp_image, vxy
 
-    def run_MLS_in_folder(self, root_folder):
-        img_A = Image.open('%s/original_A.png' % root_folder).convert('RGB')
-        img_B = Image.open('%s/original_B.png' % root_folder).convert('RGB')
+    # def run_MLS_in_folder(self, root_folder):
+    #     img_A = Image.open('%s/original_A.png' % root_folder).convert('RGB')
+    #     img_B = Image.open('%s/original_B.png' % root_folder).convert('RGB')
 
-        points_A = read_points('%s/correspondence_A.txt' % root_folder)
-        points_B = read_points('%s/correspondence_Bt.txt' % root_folder)
-        points_middle = (np.array(points_A) + np.array(points_B)) / 2
+    #     points_A = read_points('%s/correspondence_A.txt' % root_folder)
+    #     points_B = read_points('%s/correspondence_Bt.txt' % root_folder)
+    #     points_middle = (np.array(points_A) + np.array(points_B)) / 2
 
-        mls_util = MLS(v_class=np.int32)
-        warp_AtoB, vxy_AtoB = mls_util.run_MLS(img_A, points_A, points_B)
-        warp_AtoM, vxy_AtoM = mls_util.run_MLS(img_A, points_A, points_middle)
-        warp_BtoA, vxy_BtoA = mls_util.run_MLS(img_B, points_B, points_A)
-        warp_BtoM, vxy_BtoM = mls_util.run_MLS(img_B, points_B, points_middle)
+    #     mls_util = MLS(v_class=np.int32)
+    #     warp_AtoB, vxy_AtoB = mls_util.run_MLS(img_A, points_A, points_B)
+    #     warp_AtoM, vxy_AtoM = mls_util.run_MLS(img_A, points_A, points_middle)
+    #     warp_BtoA, vxy_BtoA = mls_util.run_MLS(img_B, points_B, points_A)
+    #     warp_BtoM, vxy_BtoM = mls_util.run_MLS(img_B, points_B, points_middle)
 
-        np.save('%s/AtoB.npy' % root_folder,vxy_AtoB)
-        plt.imsave('%s/warp_AtoM.png' % root_folder, warp_AtoM)
-        np.save('%s/BtoA.npy' % root_folder, vxy_BtoA)
-        plt.imsave('%s/warp_BtoM.png' % root_folder, warp_BtoM)
+    #     np.save('%s/AtoB.npy' % root_folder,vxy_AtoB)
+    #     plt.imsave('%s/warp_AtoM.png' % root_folder, warp_AtoM)
+    #     np.save('%s/BtoA.npy' % root_folder, vxy_BtoA)
+    #     plt.imsave('%s/warp_BtoM.png' % root_folder, warp_BtoM)

@@ -7,7 +7,7 @@ from torch.autograd import Variable
 from sklearn.cluster import KMeans
 from . import feature_metric as FM
 # from util import draw_correspondence as draw
-from util import util
+from ..util import util
 
 class sparse_semantic_correspondence():
     def __init__(self, model, gpu_ids, tau, border_size, save_dir, k_per_level, k_final, fast):
