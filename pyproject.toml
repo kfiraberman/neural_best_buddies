@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "neural_best_buddies"
-version = "1.0.0"
+name = "neural-best-buddies"
+version = "1.0.1"
 description = ""
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
